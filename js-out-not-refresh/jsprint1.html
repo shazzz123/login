@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+    <html lang="en">
+       <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registration List</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+       </head>
+<style>
+    .custom-alert {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+    .custom-alert-box {
+        background-color: white;
+        padding: 30px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .btn-danger {
+        position: relative;
+        margin-left: 10px;
+        /* margin-right: -150px; */
+        color: red;
+        background-color: white;
+    }
+    .btn-primary {
+        margin-left: 10px;
+        color: blue;
+        background-color: white;
+    }
+    button{
+        position: relative;
+        left: -7%;
+    }
+</style>
+    <body>
+        <div class="container">
+            <table border="1" class="table table-success table-striped" id="table" >
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">&nbsp;&nbsp;&nbsp;Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+                <input type="button" value="add another values"  onclick="goBack()" class="btn btn-outline-success" 
+                style="width: auto; padding: 7px; position: relative ;left: 88%;">
+             </div>
+             <script>
+                const datas = JSON.parse(localStorage.getItem('formData')) || [];
+                const tableBody = document.getElementById('table-body');
+                
+                for (let i = 0; i < datas.length; i++) {
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = datas[i].name;
+                    row.appendChild(nameCell);
+                    const ageCell = document.createElement('td');
+                    ageCell.textContent = datas[i].age;
+                    row.appendChild(ageCell);
+                    const emailCell = document.createElement('td');
+                    emailCell.textContent = datas[i].email;
+                    row.appendChild(emailCell);
+                    const actionsCell = document.createElement('td');
+                    
+                    const removeButton = document.createElement('button');
+                    removeButton.textContent = 'Delete';
+                    removeButton.classList.add('btn', 'btn-danger');
+                    removeButton.addEventListener('click', () => {
+                        const confirmBox = document.createElement('div');
+                        confirmBox.className = 'custom-alert';
+                        const confirmDialog = document.createElement('div');
+                        confirmDialog.className = 'custom-alert-box';
+                        confirmDialog.textContent = 'Are you sure you want to delete?';
+                        const confirmButton = document.createElement('button');
+                        confirmButton.textContent = 'Yes';
+                        confirmButton.classList.add('btn', 'btn-danger');
+                        const cancelButton = document.createElement('button');
+                        cancelButton.textContent = 'Cancel';
+                        cancelButton.classList.add('btn', 'btn-danger');
+                        
+                        confirmButton.addEventListener('click', () => {
+                            datas.splice(i, 1); // Remove the item at index 'i'
+                            localStorage.setItem('formData', JSON.stringify(datas)); // Update local storage
+                            row.remove(); // Remove the row from the table
+                            confirmBox.remove();
+                        });
+                        
+                        cancelButton.addEventListener('click', () => {
+                            confirmBox.remove();
+                        });
+                        
+                        confirmDialog.appendChild(confirmButton);
+                        confirmDialog.appendChild(cancelButton);
+                        confirmBox.appendChild(confirmDialog);
+                        document.body.appendChild(confirmBox);
+                    });
+                    
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.classList.add('btn', 'btn-primary');
+                    editButton.addEventListener('click', () => {
+                        window.location.href = `jsedit.html?datas=${JSON.stringify(datas)}`;
+                    });
+                    
+                    actionsCell.appendChild(editButton);
+                    actionsCell.appendChild(removeButton);
+                    row.appendChild(actionsCell);
+                    tableBody.appendChild(row);
+                }
+                
+                function goBack() {
+                    window.location.href = "jsprint.html";
+             }
+ </script>
+</body>
+</html>

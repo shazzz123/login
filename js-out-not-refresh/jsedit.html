@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Edit Form</title>
+    <link rel="website icon" type="png" href=".vscode\abcd.png">
+</head>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: rgb(255, 255, 255);
+    }
+    h1{
+        font-weight: bold;
+        font-size: 40px;
+    }
+    .background {
+        position: relative;
+        background-color: white;
+        max-width: 600px;
+        padding: 20px;
+        border: 1px solid rgb(157, 152, 152);
+        border-radius: 5px;
+        box-shadow: 10px 10px 0 0;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    .form-rounded {
+        border-radius: 1rem;
+        width: 400px;
+        box-shadow: 2px 2px 0 0;
+    }
+</style>
+<body>
+    <form id="edit-form">
+        <div class="background">
+            <br><center><h1>EDIT FORM</h1></center><br>
+
+            <div class="name">Name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="text" id="name" class="form-control form-rounded"  name="name" placeholder="Enter your name"  required></div><br>
+            
+            <div class="age">Age:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="number" id="age" class="form-control form-rounded" name="age" min="1" max="100" placeholder="Enter your age"  required></div><br>
+            
+            <div class="email">Email:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="email" id="email" class="form-control form-rounded" name="email" placeholder="Enter your email address" required></div><br>
+            
+            <input type="hidden" id="edit-index" name="edit-index" value="">
+            
+            <center>
+                <input type="button" value="Cancel" onclick="goBack()" class="btn btn-outline-danger" 
+                style="width: 100px; padding: 7px;box-shadow: 3px 3px 0em 0em; color: rgb(240, 2, 2); background-color: white;">
+                <input type="submit" id="btn" value="Confirm Edit " class="btn btn-outline-primary" 
+                style="width: 100px; padding: 7px;box-shadow: 3px 3px 0em 0em; color: blue; background-color: white; margin-left: 10px;">
+            </center><br>
+        </div>
+    </form>
+    <script>
+        const editForm = document.getElementById('edit-form');
+        const nameInput = document.getElementById('name');
+        const ageInput = document.getElementById('age');
+        const emailInput = document.getElementById('email');
+        const editIndexInput = document.getElementById('edit-index');
+
+        const data = JSON.parse(localStorage.getItem('formData')) || [];
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const editIndex = urlParams.get('data');
+        console.log(data)
+
+        if (editIndex !== null) {
+            const entryToEdit = data[editIndex];
+                if (entryToEdit) {
+                    nameInput.value = entryToEdit.name;
+                    ageInput.value = entryToEdit.age;
+                    emailInput.value = entryToEdit.email;
+                    editIndexInput.value = editIndex;
+                }
+            }
+            editForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const editedData = {
+                    name: nameInput.value,
+                    age: ageInput.value,
+                    email: emailInput.value,
+                };
+            if (editIndex !== null) {
+                data[editIndex] = editedData;
+            }
+            localStorage.setItem('formData', JSON.stringify(data));
+            window.location.href = 'jsprint1.html';
+        });
+        function goBack() {
+        window.history.back();
+      }
+    </script>
+</body>
+</html>
